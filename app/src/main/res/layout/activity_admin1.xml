@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Admin1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:layout_centerVertical="true"
+        android:background="@color/light_grey">
+
+
+        <EditText
+            android:id="@+id/editTextName1"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/border"
+            android:hint="Enter name"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/buttonAddArtist1"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextName1"
+        android:text="Add" />
+
+
+        <ListView
+            android:id="@+id/listViewArtists1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonAddArtist1"
+            android:background="@color/white"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"></ListView>
+    </RelativeLayout>
+
+</RelativeLayout>
