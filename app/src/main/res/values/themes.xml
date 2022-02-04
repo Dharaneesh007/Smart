@@ -15,20 +15,5 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 
-
     </style>
-
-    <style name="welcome">
-
-        <item name="android:textSize">
-            45sp
-        </item>
-
-        <item name="android:textColor">
-            #FFFFFF
-        </item>
-
-    </style>
-
-
 </resources>

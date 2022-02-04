@@ -45,6 +45,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.Executor;
 
@@ -62,7 +67,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
-    int a;
+    DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered User");
+    String textrole;
 
 
     DrawerLayout drawerLayout;
@@ -115,8 +121,31 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 super.onAuthenticationSucceeded(result);
                 Toast.makeText(getApplicationContext(),
                         "Authentication succeeded!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
-                finish();
+                FirebaseUser firebaseUser = authProfile.getCurrentUser();
+                String userIDofRegistered = firebaseUser.getUid();
+                authProfile = FirebaseAuth.getInstance();
+                referenceProfile.child(userIDofRegistered).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
+                        if (readUserDetails != null) {
+
+                            textrole = readUserDetails.role;
+                            if (textrole.equals("admin")) {
+                                startActivity(new Intent(LoginActivity.this, Administrator.class));
+                                finish();
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
+                                finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -227,31 +256,51 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
     private void loginUser(String email, String pwd) {
 
-        authProfile.signInWithEmailAndPassword(email,pwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+        authProfile.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = authProfile.getCurrentUser();
-                    if(firebaseUser.isEmailVerified()){
-                        Toast.makeText(LoginActivity.this, "Your  are Logged in now!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
-                        finish();
+                    if (firebaseUser.isEmailVerified()) {
+                        String userIDofRegistered = firebaseUser.getUid();
+                        authProfile = FirebaseAuth.getInstance();
+                        referenceProfile.child(userIDofRegistered).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
+                                if (readUserDetails != null) {
 
-                    }else {
+                                    textrole = readUserDetails.role;
+                                    if (textrole.equals("admin")) {
+                                        startActivity(new Intent(LoginActivity.this, Administrator.class));
+                                        finish();
+                                    } else {
+                                        startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
+                                        finish();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    } else {
                         firebaseUser.sendEmailVerification();
                         authProfile.signOut();
                         showAlertDialog();
                     }
-                }else {
-                    try{
+                } else {
+                    try {
                         throw task.getException();
-                    }catch (FirebaseAuthInvalidUserException e){
+                    } catch (FirebaseAuthInvalidUserException e) {
                         editTextLoginEmail.setError("User does not found or is no longer valid. Please register again.");
                         editTextLoginEmail.requestFocus();
-                    }catch (FirebaseAuthInvalidCredentialsException e){
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
                         editTextLoginEmail.setError("Invalid email or password, Re-enter and try again");
                         editTextLoginEmail.requestFocus();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                         Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -260,10 +309,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 progressBar.setVisibility(View.GONE);
             }
         });
-
-
-
-
     }
 
     private void showAlertDialog() {
@@ -295,12 +340,35 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             SharedPreferences sharedPreferences = getSharedPreferences("save",0);
             String  bio = sharedPreferences.getString(TEXT,"");
 
+            FirebaseUser firebaseUser = authProfile.getCurrentUser();
             if (bio.equals("1")){
                 biometricPrompt.authenticate(promptInfo);
             }
             else{
-                startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
-                finish();
+                String userIDofRegistered = firebaseUser.getUid();
+                authProfile = FirebaseAuth.getInstance();
+                referenceProfile.child(userIDofRegistered).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
+                        if (readUserDetails != null) {
+
+                            textrole = readUserDetails.role;
+                            if (textrole.equals("admin")) {
+                                startActivity(new Intent(LoginActivity.this, Administrator.class));
+                                finish();
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
+                                finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         }
     }

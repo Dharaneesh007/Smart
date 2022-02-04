@@ -57,6 +57,25 @@
         <entry key="..\:/Smart/app/src/main/res/layout/item_layout.xml" value="0.21770833333333334" />
         <entry key="..\:/Smart/app/src/main/res/layout/list_layout.xml" value="0.21770833333333334" />
         <entry key="..\:/Smart/app/src/main/res/layout/list_layout1.xml" value="0.20364583333333333" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/drawable/border.xml" value="0.231" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/drawable/rectangle.xml" value="0.1" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/drawable/style_spinner.xml" value="0.231" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/drawable/table_border.xml" value="0.231" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/drawable/table_header_border.xml" value="0.231" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_administrator.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_dashboard.xml" value="0.22" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_delete_profile.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_final.xml" value="0.25" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_form.xml" value="0.25" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_smart.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_switch.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/activity_welcome.xml" value="0.32430398796087284" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/data_layout.xml" value="0.25" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/item_file.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/item_layout.xml" value="0.22" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/spinner.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/layout/spinner_dropdown.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/Sangavin/AndroidStudioProjects/Smart/app/src/main/res/menu/main_menu.xml" value="0.22447916666666667" />
       </map>
     </option>
   </component>

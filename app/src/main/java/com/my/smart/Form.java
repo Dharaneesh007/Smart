@@ -218,6 +218,7 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
                     int min = minute1-minute2;
 
                     hr_edt.setText(hr+":"+min);
+                    hr_edt.setEnabled(false);
                 }
             },mHour,mMinute, false);
             timePickerDialog.show();

@@ -27,7 +27,7 @@ public class AdapterItem extends RecyclerView.Adapter<AdapterItem.ItemViewHolder
     @NonNull
     @Override
     public AdapterItem.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_layout, parent, false);
         return new ItemViewHolder(itemView);
     }
 
@@ -47,13 +47,13 @@ public class AdapterItem extends RecyclerView.Adapter<AdapterItem.ItemViewHolder
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            fname = itemView.findViewById(R.id.fname1);
-            cname = itemView.findViewById(R.id.cls);
-            dt = itemView.findViewById(R.id.date);
-            st = itemView.findViewById(R.id.stime);
-            et = itemView.findViewById(R.id.etime);
-            hr = itemView.findViewById(R.id.utime);
-            pur = itemView.findViewById(R.id.purpose);
+            fname = itemView.findViewById(R.id.data_fname);
+            cname = itemView.findViewById(R.id.data_class);
+            dt = itemView.findViewById(R.id.data_date);
+            st = itemView.findViewById(R.id.data_stime);
+            et = itemView.findViewById(R.id.data_etime);
+            hr = itemView.findViewById(R.id.data_hr);
+            pur = itemView.findViewById(R.id.data_pur);
         }
 
         public void viewBind(dataUser dataUser) {

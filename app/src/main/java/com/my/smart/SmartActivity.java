@@ -24,16 +24,15 @@ public class SmartActivity extends AppCompatActivity implements NavigationView.O
     NavigationView navigationView;
     Toolbar toolbar;
     FirebaseAuth mAuth;
-    Button entry, export, dashboard, admin;
+    Button entry,  dashboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smart);
 
-        export = findViewById(R.id.export);
         entry = findViewById(R.id.entry);
         dashboard = findViewById(R.id.dashboard);
-        admin = findViewById(R.id.admin);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -68,24 +67,14 @@ public class SmartActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(new Intent(SmartActivity.this,Form.class));
             }
         });
-        export.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SmartActivity.this,Final.class));
-            }
-        });
+
         dashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SmartActivity.this,DashboardActivity.class));
             }
         });
-        admin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SmartActivity.this,Switch.class));
-            }
-        });
+
     }
 
 

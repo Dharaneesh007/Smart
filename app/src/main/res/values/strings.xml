@@ -17,4 +17,24 @@
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <string name="welcome">WELCOME</string>
 
+    <style name="smart">
+
+        <item name="android:textSize">
+            10sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
+
+
+    <!-- strings.xml -->
+    <string name="smart">
+
+SMART
+</string>
+
+
 </resources>

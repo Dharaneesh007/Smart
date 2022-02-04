@@ -112,7 +112,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
         cari = findViewById(R.id.cari);
         input_minimal = findViewById(R.id.input_minimal);
         input_maximal = findViewById(R.id.input_maximal);
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView_data);
         export = findViewById(R.id.excel);
 
         export.setEnabled(false);
@@ -343,6 +343,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                 alertDialogBuilder.setPositiveButton("Ok", (dialog, id) -> {
                     // and display the username on main activity layout
                     csvFile = userAnswer.getText().toString();
+                    userAnswer.setText(csvFile);
                     export.setEnabled(true);
                 });
 
