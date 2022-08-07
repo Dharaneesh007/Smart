@@ -1,12 +1,5 @@
 package com.my.smart;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -22,6 +15,13 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -33,11 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class Form extends AppCompatActivity implements View.OnClickListener , NavigationView.OnNavigationItemSelectedListener{
@@ -51,12 +49,14 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
     ArrayList<String> list,list1;
     ArrayAdapter<String> adapter,adapter1;
     FirebaseAuth mAuth;
-    private static Locale id = new Locale("en", "IN");
+    private static final Locale id = new Locale("en", "IN");
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", id);
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
     int hr1,hr2,minute1,minute2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,13 +1,5 @@
 package com.my.smart;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +11,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +34,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     private TextView textViewWelcome, textViewFullName, textViewEmail, textViewDOB, textViewGender, textViewMobile;
     private ProgressBar progressBar;
-    private String fullname, email, dob, gender, mobile;
+    private String fullname, email, dob, gender, mobile, textrole;
     private ImageView imageView;
     private FirebaseAuth authprofile;
 
@@ -145,6 +145,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     dob = readWriteUserDetails.dob;
                     gender = readWriteUserDetails.gender;
                     mobile = readWriteUserDetails.mobile;
+                    textrole = readWriteUserDetails.role;
 
                     textViewWelcome.setText("Welcome, " + fullname + "!");
                     textViewFullName.setText(fullname);
@@ -179,6 +180,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }
     }
 
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -203,7 +205,13 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                 startActivity(new Intent(UserProfileActivity.this, DeleteProfileActivity.class));
                 break;
             case R.id.nav_dashboard:
-                startActivity(new Intent(UserProfileActivity.this, WelcomeActivity.class));
+                if (textrole.equals("admin")) {
+                    startActivity(new Intent(UserProfileActivity.this, Administrator.class));
+                    finish();
+                } else {
+                    startActivity(new Intent(UserProfileActivity.this, WelcomeActivity.class));
+                    finish();
+                }
                 break;
             case R.id.menu_logout:
                 mAuth.signOut();

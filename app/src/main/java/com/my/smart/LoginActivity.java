@@ -1,15 +1,9 @@
 package com.my.smart;
 
 
-import static android.provider.Telephony.Mms.Part.TEXT;
-import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
-import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
-
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -20,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,9 +24,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.biometric.BiometricManager;
-import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -51,21 +41,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.concurrent.Executor;
-
-public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private EditText editTextLoginEmail, editTextLoginPwd;
     private ProgressBar progressBar;
     private FirebaseAuth authProfile;
-    private TextView register,forget_pwd;
-    private static final  String TAG = "LoginActivity";
-    private static final  int REQUEST_CODE = 101010;
+    private static final String TAG = "LoginActivity";
+    private TextView register, forget_pwd;
 
-    private Executor executor;
-    private BiometricPrompt biometricPrompt;
-    private BiometricPrompt.PromptInfo promptInfo;
 
     DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered User");
     String textrole;
@@ -76,92 +60,12 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     Toolbar toolbar;
     FirebaseAuth mAuth;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-
-        BiometricManager biometricManager = BiometricManager.from(this);
-        switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)) {
-            case BiometricManager.BIOMETRIC_SUCCESS:
-                Log.d("MY_APP_TAG", "App can authenticate using biometrics.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-                Log.e("MY_APP_TAG", "No biometric features available on this device.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-                Log.e("MY_APP_TAG", "Biometric features are currently unavailable.");
-                break;
-            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-                // Prompts the user to create credentials that your app accepts.
-                final Intent enrollIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
-                enrollIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
-                        BIOMETRIC_STRONG | DEVICE_CREDENTIAL);
-                startActivityForResult(enrollIntent, REQUEST_CODE);
-                break;
-        }
-        executor = ContextCompat.getMainExecutor(this);
-        biometricPrompt = new BiometricPrompt(LoginActivity.this,
-                executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationError(int errorCode,
-                                              @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-                Toast.makeText(getApplicationContext(),
-                        "Authentication error: " + errString, Toast.LENGTH_SHORT)
-                        .show();
-            }
-
-            @Override
-            public void onAuthenticationSucceeded(
-                    @NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                Toast.makeText(getApplicationContext(),
-                        "Authentication succeeded!", Toast.LENGTH_SHORT).show();
-                FirebaseUser firebaseUser = authProfile.getCurrentUser();
-                String userIDofRegistered = firebaseUser.getUid();
-                authProfile = FirebaseAuth.getInstance();
-                referenceProfile.child(userIDofRegistered).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
-                        if (readUserDetails != null) {
-
-                            textrole = readUserDetails.role;
-                            if (textrole.equals("admin")) {
-                                startActivity(new Intent(LoginActivity.this, Administrator.class));
-                                finish();
-                            } else {
-                                startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
-                                finish();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-                Toast.makeText(getApplicationContext(), "Authentication failed",
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-
-        promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login for my app")
-                .setSubtitle("Log in using your biometric credential")
-                .setNegativeButtonText("Use account password")
-                .build();
 
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -172,10 +76,10 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
         Menu menu = navigationView.getMenu();
 
-            menu.findItem(R.id.nav_logout).setVisible(false);
-            menu.findItem(R.id.nav_profile).setVisible(false);
-            menu.findItem(R.id.nav_login).setVisible(false);
-            menu.findItem(R.id.nav_settings).setVisible(false);
+        menu.findItem(R.id.nav_logout).setVisible(false);
+        menu.findItem(R.id.nav_profile).setVisible(false);
+        menu.findItem(R.id.nav_login).setVisible(false);
+        menu.findItem(R.id.nav_settings).setVisible(false);
 
 
         navigationView.bringToFront();
@@ -201,10 +105,10 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         imageViewShowHidePwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editTextLoginPwd.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
+                if (editTextLoginPwd.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
                     editTextLoginPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     imageViewShowHidePwd.setImageResource(R.drawable.ic_hide_pwd);
-                }else{
+                } else {
                     editTextLoginPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     imageViewShowHidePwd.setImageResource(R.drawable.ic_show_pwd);
                 }
@@ -219,21 +123,21 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 String textPwd = editTextLoginPwd.getText().toString();
 
 
-                if(TextUtils.isEmpty(textEmail)){
+                if (TextUtils.isEmpty(textEmail)) {
                     Toast.makeText(LoginActivity.this, "Please Enter your email", Toast.LENGTH_SHORT).show();
                     editTextLoginEmail.setError("Email is Required");
                     editTextLoginEmail.requestFocus();
-                }else if(!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()){
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()) {
                     Toast.makeText(LoginActivity.this, "re-enter Enter your email", Toast.LENGTH_SHORT).show();
                     editTextLoginEmail.setError("Valid email is Required");
                     editTextLoginEmail.requestFocus();
-                }else if(TextUtils.isEmpty(textPwd)){
+                } else if (TextUtils.isEmpty(textPwd)) {
                     Toast.makeText(LoginActivity.this, "Please Enter your password", Toast.LENGTH_SHORT).show();
                     editTextLoginPwd.setError("Password is Required");
                     editTextLoginPwd.requestFocus();
-                }else{
+                } else {
                     progressBar.setVisibility(View.VISIBLE);
-                    loginUser(textEmail,textPwd);
+                    loginUser(textEmail, textPwd);
                 }
             }
         });
@@ -247,7 +151,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         forget_pwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"You can reset your password now!",Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "You can reset your password now!", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
             }
         });
@@ -334,42 +238,36 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     @Override
     protected void onStart() {
         super.onStart();
-        if(authProfile.getCurrentUser() != null){
+        if (authProfile.getCurrentUser() != null) {
             Toast.makeText(LoginActivity.this, "Already Logged In", Toast.LENGTH_SHORT).show();
 
-            SharedPreferences sharedPreferences = getSharedPreferences("save",0);
-            String  bio = sharedPreferences.getString(TEXT,"");
-
             FirebaseUser firebaseUser = authProfile.getCurrentUser();
-            if (bio.equals("1")){
-                biometricPrompt.authenticate(promptInfo);
-            }
-            else{
-                String userIDofRegistered = firebaseUser.getUid();
-                authProfile = FirebaseAuth.getInstance();
-                referenceProfile.child(userIDofRegistered).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
-                        if (readUserDetails != null) {
 
-                            textrole = readUserDetails.role;
-                            if (textrole.equals("admin")) {
-                                startActivity(new Intent(LoginActivity.this, Administrator.class));
-                                finish();
-                            } else {
-                                startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
-                                finish();
-                            }
+            String userIDofRegistered = firebaseUser.getUid();
+            authProfile = FirebaseAuth.getInstance();
+            referenceProfile.child(userIDofRegistered).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
+                    if (readUserDetails != null) {
+
+                        textrole = readUserDetails.role;
+                        if (textrole.equals("admin")) {
+                            startActivity(new Intent(LoginActivity.this, Administrator.class));
+                            finish();
+                        } else {
+                            startActivity(new Intent(LoginActivity.this, WelcomeActivity.class));
+                            finish();
                         }
                     }
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-            }
+                }
+            });
+
         }
     }
 
