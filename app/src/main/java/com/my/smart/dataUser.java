@@ -1,7 +1,14 @@
 package com.my.smart;
 
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class dataUser {
+
+    DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
     String fname, cname;
     long time;
@@ -36,8 +43,12 @@ public class dataUser {
         this.cname = cname;
     }
 
-    public long getTime() {
-        return time;
+    public String getTime() {
+        Timestamp ts=new Timestamp(time);
+        Date date=new Date(ts.getTime());
+
+
+        return formatter.format(date);
     }
 
     public void setTime(long time) {

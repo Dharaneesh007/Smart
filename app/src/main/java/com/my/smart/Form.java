@@ -53,7 +53,7 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
     ArrayAdapter<String> adapter,adapter1;
     FirebaseAuth mAuth;
     private static final Locale id = new Locale("en", "IN");
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", id);
+    DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
@@ -96,16 +96,16 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
         navigationView.setCheckedItem(R.id.nav_profile);
 
 
-        btnEntry = (Button) findViewById(R.id.btnEtry);
+        btnEntry = findViewById(R.id.btnEtry);
 
-        date_edt = (EditText) findViewById(R.id.date_edt_text);
-        time_edt = (EditText) findViewById(R.id.time_edt_text);
-        etime_edt = (EditText) findViewById(R.id.etime_edt_text);
-        hr_edt = (EditText) findViewById(R.id.hr_edt_text);
-        pu_edt = (EditText) findViewById(R.id.pu_edt_text);
+        date_edt = findViewById(R.id.date_edt_text);
+        time_edt = findViewById(R.id.time_edt_text);
+        etime_edt = findViewById(R.id.etime_edt_text);
+        hr_edt = findViewById(R.id.hr_edt_text);
+        pu_edt = findViewById(R.id.pu_edt_text);
 
-        sname_spinner = (Spinner) findViewById(R.id.sname_spr);
-        clsname_spinner = (Spinner) findViewById(R.id.clsname_spr);
+        sname_spinner = findViewById(R.id.sname_spr);
+        clsname_spinner = findViewById(R.id.clsname_spr);
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("faculty");
 
@@ -190,10 +190,10 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
             datePickerDialog.setTitle("Date");
             datePickerDialog.show();
 
-            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
             String test = formatter.format(calendar.getTime());
             try {
-                date1 = (Date)formatter.parse(test);
+                date1 = formatter.parse(test);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

@@ -59,7 +59,7 @@ public class AdapterItem extends RecyclerView.Adapter<AdapterItem.ItemViewHolder
         public void viewBind(dataUser dataUser) {
             fname.setText(dataUser.getFname());
             cname.setText(dataUser.getCname());
-            dt.setText(dataUser.getTime());
+            dt.setText( dataUser.getTime());
             st.setText(dataUser.getStime());
             et.setText(dataUser.getEtime());
             hr.setText(dataUser.getHrs());

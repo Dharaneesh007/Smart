@@ -54,7 +54,7 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
-public class Final extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class Final extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     EditText input_minimal,
             input_maximal;
     Button cari,
@@ -75,6 +75,10 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
     NavigationView navigationView;
     Toolbar toolbar;
     FirebaseAuth mAuth;
+    long min, max;
+    Date date;
+    DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
 
 
     @Override
@@ -93,10 +97,10 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
 
         Menu menu = navigationView.getMenu();
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null){
+        if (user != null) {
             menu.findItem(R.id.nav_login).setVisible(false);
         }
-        if (user == null){
+        if (user == null) {
             menu.findItem(R.id.nav_logout).setVisible(false);
             menu.findItem(R.id.nav_profile).setVisible(false);
         }
@@ -119,7 +123,6 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
         export.setEnabled(false);
 
 
-
         input_minimal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,13 +131,13 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         calendar.set(year, month, dayOfMonth);
                         input_minimal.setText(simpleDateFormat.format(calendar.getTime()));
-                        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                         String test = formatter.format(calendar.getTime());
                         try {
-                            date_minimal = (Date)formatter.parse(test);
+                            date_minimal = formatter.parse(test);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+                        min = date_minimal.getTime();
 
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -150,13 +153,13 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         calendar.set(year, month, dayOfMonth);
                         input_maximal.setText(simpleDateFormat.format(calendar.getTime()));
-                        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                         String test = formatter.format(calendar.getTime());
                         try {
-                            date_maximal = (Date)formatter.parse(test);
+                            date_maximal = formatter.parse(test);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+                        max = date_maximal.getTime();
 
                         String input1 = input_maximal.getText().toString();
                         String input2 = input_minimal.getText().toString();
@@ -175,7 +178,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            showLisenerRange(snapshot,date_minimal,date_maximal);
+                            showLisenerRange(snapshot, date_minimal, date_maximal);
                         }
 
                         @Override
@@ -185,7 +188,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                     });
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -195,12 +198,9 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                {
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                }
-                else
-                {
+                } else {
                     //your code
                     try {
                         createExcelSheet();
@@ -237,14 +237,13 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                 workbook = Workbook.createWorkbook(futureStudioIconFile, wbSettings);
                 createFirstSheet();
 //            createSecondSheet();
-                //closing cursor
                 workbook.write();
                 workbook.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }else {
+        } else {
             Toast.makeText(context, "Enter file name to Save", Toast.LENGTH_LONG).show();
         }
     }
@@ -257,8 +256,8 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
             database.child("entry").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    showLisenerRange(snapshot,date_minimal,date_maximal);
-                    Toast.makeText(context, "Data Exported, Check File Maganer/Smart/"+csvFile, Toast.LENGTH_LONG).show();
+                    showLisenerRange(snapshot, date_minimal, date_maximal);
+                    Toast.makeText(context, "Data Exported, Check File Maganer/Smart/" + csvFile, Toast.LENGTH_LONG).show();
                     startActivity(new Intent(Final.this, Final.class));
                 }
 
@@ -284,7 +283,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
             for (int i = 0; i < list.size(); i++) {
                 sheet.addCell(new Label(0, i + 1, list.get(i).getFname()));
                 sheet.addCell(new Label(1, i + 1, list.get(i).getCname()));
-                sheet.addCell(new Label(2, i + 1, list.get(i).getTime()));
+                sheet.addCell(new Label(2, i + 1, String.valueOf(list.get(i).getTime())));
                 sheet.addCell(new Label(3, i + 1, list.get(i).getStime()));
                 sheet.addCell(new Label(4, i + 1, list.get(i).getEtime()));
                 sheet.addCell(new Label(5, i + 1, list.get(i).getHrs()));
@@ -319,26 +318,30 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
         adapterItem = new AdapterItem(context, list);
         recyclerView.setAdapter(adapterItem);
     }
+
     private void showLisenerRange(DataSnapshot snapshot, Date date_minimal, Date date_maximal) {
         list.clear();
         for (DataSnapshot item : snapshot.getChildren()) {
             dataUser user = item.getValue(dataUser.class);
-            if (user != null){
-                String current = user.getTime();
-                long userdate=Long.parseLong(current);
-                if (userdate>= date_minimal && userdate<=date_maximal){
+            if (user != null) {
+                try {
+                    date = formatter.parse(user.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (date.getTime() >= min && date.getTime() <= max) {
                     list.add(user);
 
                 }
             }
 
-            }
+        }
         adapterItem = new AdapterItem(context, list);
         recyclerView.setAdapter(adapterItem);
     }
 
     public void addListenerOnButton() {
-        TextView button =  findViewById(R.id.file);
+        TextView button = findViewById(R.id.file);
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -354,7 +357,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
 
                 alertDialogBuilder.setView(promptUserView);
 
-                final EditText userAnswer = (EditText) promptUserView.findViewById(R.id.username);
+                final EditText userAnswer = promptUserView.findViewById(R.id.username);
 
                 alertDialogBuilder.setTitle("File Name");
 
@@ -375,11 +378,12 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
         });
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null){
+        if (user == null) {
             startActivity(new Intent(Final.this, LoginActivity.class));
             Toast.makeText(Final.this, "Login is mandatory to make an Data Export!", Toast.LENGTH_LONG).show();
         }
