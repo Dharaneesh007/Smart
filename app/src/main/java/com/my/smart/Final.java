@@ -78,6 +78,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
     long min, max;
     Date date;
     DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+    DateFormat formatter1 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
 
 
@@ -230,7 +231,7 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
 
             File futureStudioIconFile = new File(Environment
                     .getExternalStorageDirectory() + "/" + "Smart"
-                    + "/" + csvFile + ".xls");
+                    + "/" + csvFile+" "+formatter1.format(Calendar.getInstance().getTime())+ ".xls");
             WorkbookSettings wbSettings = new WorkbookSettings();
             wbSettings.setLocale(new Locale("en", "EN"));
             try {
