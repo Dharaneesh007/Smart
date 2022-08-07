@@ -1,17 +1,18 @@
 package com.my.smart;
 
 public class Entry {
-    String id, fname, cname,time;
+    String id, fname, cname;
     String stime, etime,hrs, pur;
+    long date;
 
     public Entry() {
     }
 
-    public Entry(String id, String fname, String cname, String time, String stime, String etime, String hrs, String pur) {
+    public Entry(String id, String fname, String cname, long date, String stime, String etime, String hrs, String pur) {
         this.id = id;
         this.fname = fname;
         this.cname = cname;
-        this.time = time;
+        this.date = date;
         this.stime = stime;
         this.etime = etime;
         this.hrs = hrs;
@@ -43,12 +44,12 @@ public class Entry {
         this.cname = cname;
     }
 
-    public String getTime() {
-        return time;
+    public long getTime() {
+        return date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTime(long time) {
+        this.date = time;
     }
 
     public String getStime() {

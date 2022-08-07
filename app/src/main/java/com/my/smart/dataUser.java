@@ -4,13 +4,13 @@ package com.my.smart;
 public class dataUser {
 
     String fname, cname;
-    String time;
+    long time;
     String stime, etime,hrs, pur;
 
     public dataUser() {
     }
 
-    public dataUser(String fname, String cname, String time, String stime, String etime, String hrs, String pur) {
+    public dataUser(String fname, String cname, long time, String stime, String etime, String hrs, String pur) {
         this.fname = fname;
         this.cname = cname;
         this.time = time;
@@ -36,11 +36,11 @@ public class dataUser {
         this.cname = cname;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

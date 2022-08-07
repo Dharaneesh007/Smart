@@ -39,13 +39,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.write.Label;
@@ -73,7 +75,6 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
     NavigationView navigationView;
     Toolbar toolbar;
     FirebaseAuth mAuth;
-
 
 
     @Override
@@ -127,8 +128,13 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         calendar.set(year, month, dayOfMonth);
                         input_minimal.setText(simpleDateFormat.format(calendar.getTime()));
-                        date_minimal = calendar.getTime();
-
+                        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                        String test = formatter.format(calendar.getTime());
+                        try {
+                            date_minimal = (Date)formatter.parse(test);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -144,7 +150,13 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         calendar.set(year, month, dayOfMonth);
                         input_maximal.setText(simpleDateFormat.format(calendar.getTime()));
-                        date_maximal = calendar.getTime();
+                        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                        String test = formatter.format(calendar.getTime());
+                        try {
+                            date_maximal = (Date)formatter.parse(test);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
                         String input1 = input_maximal.getText().toString();
                         String input2 = input_minimal.getText().toString();
@@ -155,23 +167,29 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
             }
         });
 
-        cari.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Query query = database.child("entry");
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        showLisenerRange(snapshot,date_minimal,date_maximal);
-                    }
+        try {
+            cari.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Query query = database.child("entry");
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            showLisenerRange(snapshot,date_minimal,date_maximal);
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+
+        }
+
+
         addListenerOnButton();
 
         export.setOnClickListener(new View.OnClickListener() {
@@ -306,8 +324,9 @@ public class Final extends AppCompatActivity implements NavigationView.OnNavigat
         for (DataSnapshot item : snapshot.getChildren()) {
             dataUser user = item.getValue(dataUser.class);
             if (user != null){
-                Date current = strtotime.strtotime(user.getTime());
-                if (current.getTime()>= date_minimal.getTime() && current.getTime()<=date_maximal.getTime()){
+                String current = user.getTime();
+                long userdate=Long.parseLong(current);
+                if (userdate>= date_minimal && userdate<=date_maximal){
                     list.add(user);
 
                 }

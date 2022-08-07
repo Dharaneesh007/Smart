@@ -33,9 +33,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class Form extends AppCompatActivity implements View.OnClickListener , NavigationView.OnNavigationItemSelectedListener{
@@ -55,7 +58,7 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
     NavigationView navigationView;
     Toolbar toolbar;
     int hr1,hr2,minute1,minute2;
-
+    Date date1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +174,7 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
     public void onClick(View v) {
 
         if (v==date_edt){
-            final Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             mYear = calendar.get(Calendar.YEAR);
             mMonth = calendar.get(Calendar.MONTH);
             mDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -179,25 +182,32 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    date_edt.setText(dayOfMonth+"-"+(month+1)+"-"+year);
+                    date_edt.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
+                    calendar.set(dayOfMonth,month,year);
                 }
             },mYear,mMonth,mDay);
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.setTitle("Date");
             datePickerDialog.show();
+
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            String test = formatter.format(calendar.getTime());
+            try {
+                date1 = (Date)formatter.parse(test);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         }
         if (v==time_edt){
             final Calendar c = Calendar.getInstance();
             mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = c.get(Calendar.MINUTE);
 
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    time_edt.setText(hourOfDay+":"+minute);
-                    hr1 = hourOfDay;
-                    minute1 = minute;
-                }
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+                time_edt.setText(hourOfDay+":"+minute);
+                hr1 = hourOfDay;
+                minute1 = minute;
             },mHour,mMinute, false);
             timePickerDialog.show();
             timePickerDialog.setTitle("Starting Time");
@@ -222,19 +232,19 @@ public class Form extends AppCompatActivity implements View.OnClickListener , Na
                 }
             },mHour,mMinute, false);
             timePickerDialog.show();
-            timePickerDialog.setTitle("End Time");
+            timePickerDialog.setTitle("Ending Time");
         }
         if(v==btnEntry){
             String id = databaseReference2.push().getKey();
             String fname = sname_spinner.getSelectedItem().toString().trim();
             String cname = clsname_spinner.getSelectedItem().toString().trim();
-            String tgl_daftar_date = date_edt.getText().toString().trim();
+            long date = date1.getTime();
             String stime = time_edt.getText().toString().trim();
             String etime = etime_edt.getText().toString().trim();
             String hrs = hr_edt.getText().toString().trim();
             String pur = pu_edt.getText().toString().trim();
 
-            Entry entry = new Entry(id, fname, cname, tgl_daftar_date, stime, etime,hrs, pur);
+            Entry entry = new Entry(id, fname, cname, date, stime, etime,hrs, pur);
             databaseReference2.child(id).setValue(entry)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
